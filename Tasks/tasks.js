@@ -29,6 +29,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
+const currentProject = "NX1cH7RBU17dK2GZJs0G";
 
 onAuthStateChanged(auth, (user) => {
     if (user) {
@@ -58,6 +59,10 @@ function loadUserData() {
         });
 }
 
+function loadTasksOfProject() {
+    const projRef = collection(db, "users", auth.currentUser.uid, "projects", currentProject)
+}
+
 function addNewTask() {
     const todolist = document.querySelector('.To-Do-List');
     let newTask = document.createElement('li');
@@ -85,4 +90,6 @@ function addNewTask() {
         '                            </a>';
     todolist.appendChild(newTask);
 }
+
+
 
