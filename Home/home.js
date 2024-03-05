@@ -1,20 +1,7 @@
-import {initializeApp} from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
-import {
-    addDoc,
-    collection,
-    deleteDoc,
-    doc,
-    getDoc,
-    getDocs,
-    getFirestore,
-    updateDoc,
-} from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
-import {getAuth, onAuthStateChanged} from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+import { getFirestore, collection, getDoc, getDocs, addDoc, deleteDoc, updateDoc, doc } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
 
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
     apiKey: "AIzaSyDZJTH0Znyi13etPM6Ag5M-lQ_WeqXOIsU",
     authDomain: "scrumflow-6e479.firebaseapp.com",
@@ -25,16 +12,18 @@ const firebaseConfig = {
     measurementId: "G-2427QNHC73"
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
 
+// Authentifizierungsstatus beibehalten
 onAuthStateChanged(auth, (user) => {
     if (user) {
-        loadUserData()
+      console.log("User is signed in with UID:", user.uid);
+      loadUserEvents();
     } else {
-        console.log("No user is signed in.");
+      console.log("No user is signed in.");
+      redirectToLogin();
     }
 });
 
