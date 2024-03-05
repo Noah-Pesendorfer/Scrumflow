@@ -10,7 +10,11 @@ import {
     updateDoc,
 } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
 import {getAuth, onAuthStateChanged} from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
 
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
     apiKey: "AIzaSyDZJTH0Znyi13etPM6Ag5M-lQ_WeqXOIsU",
     authDomain: "scrumflow-6e479.firebaseapp.com",
@@ -24,79 +28,41 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-const auth = getAuth();
-let projectsArr = [];
-
-const grid = document.querySelector('.project-grid');
+const auth = getAuth(app);
 
 onAuthStateChanged(auth, (user) => {
     if (user) {
-        loadProjects();
+        loadUserData();
     } else {
         console.log("No user is signed in.");
     }
 });
 
+document.querySelector('.add-task').addEventListener('click', () => addNewTask())
 
-document.querySelector('.add-project').addEventListener('click', () => addNewProject())
-
-function loadProjects() {
-    const userRef = doc(db, "users", auth.currentUser.uid);
-    const projectsRef = collection(db, "users", auth.currentUser.uid, "projects");
+function loadUserData() {
+    const userRef = doc(db, "users", auth.currentUser.uid)
     getDoc(userRef)
         .then(async docSnapshot => {
             if (docSnapshot.exists()) {
                 const UserData = docSnapshot.data();
-                let username = UserData.name;
 
-                document.querySelector('.username').innerHTML = username;
+                document.querySelector('.username').innerHTML = UserData.name;
 
             } else {
                 console.log("Token-Dokument existiert nicht");
             }
-            getDocs(projectsRef)
-                .then(querySnapshot => {
-                    querySnapshot.forEach(doc => {
-                        const projectData = doc.data();
-
-                        const project = {id: doc.id, ...projectData};
-
-                        projectsArr.push(project);
-
-                        grid.append('            <div\n' +
-                            '                    class="relative bg-white border rounded-lg shadow-md dark:bg-gray-800 dark:border-gray-700 transform transition duration-500 hover:scale-105">\n' +
-                            '                <div class="absolute top-3 right-3 rounded-full bg-violet-600 text-gray-200  w-6 h-6 text-center">\n' +
-                            '                    10\n' +
-                            '                </div>\n' +
-                            '                <div class="p-2 flex justify-center">\n' +
-                            '                    <a href="#">\n' +
-                            '                    </a>\n' +
-                            '                </div>\n' +
-                            '\n' +
-                            '\n' +
-                            '                <div class="px-4 pb-3">\n' +
-                            '                    <div>\n' +
-                            '                        <a href="#">\n' +
-                            '                            <h5\n' +
-                            '                                    class="text-xl font-semibold tracking-tight hover:text-violet-800 dark:hover:text-violet-300 text-gray-900 dark:text-white ">\n' +
-                            '                                ' + project.title +
-                            '                            </h5>\n' +
-                            '                        </a>\n' +
-                            '\n' +
-                            '                        <p class="antialiased text-gray-600 dark:text-gray-400 text-sm break-all">\n' +
-                            '                            <i>Click to view Tasks</i>' +
-                            '                        </p>\n' +
-                            '                    </div>\n' +
-                            '                </div>\n' +
-                            '            </div>\n')
-
-                    });
-                })
         })
+        .catch(error => {
+            console.error("Fehler beim Laden des Token-Dokuments oder beim Aufrufen von GPT3: ", error);
+        });
 }
 
-function addNewProject() {
-    grid.append('<a class="block p-5 rounded-lg shadow bg-white" href="#">\n' +
+function addNewTask() {
+    const todolist = document.querySelector('.To-Do-List');
+    let newTask = document.createElement('li');
+    newTask.classList.add('mt-3');
+    newTask.innerHTML = '<a class="block p-5 rounded-lg shadow bg-white" href="#">\n' +
         '                                <div class="flex justify-between">\n' +
         '                                    <p class="text-sm w-48 font-medium leading-snug text-gray-900">Add discount code to\n' +
         '                                        checkout page</p>\n' +
@@ -116,6 +82,7 @@ function addNewProject() {
         '                                                </span>\n' +
         '                                    </div>\n' +
         '                                </div>\n' +
-        '                            </a>');
+        '                            </a>';
+    todolist.appendChild(newTask);
 }
 
