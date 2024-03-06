@@ -33,6 +33,7 @@ const currentProject = "NX1cH7RBU17dK2GZJs0G";
 
 onAuthStateChanged(auth, (user) => {
     if (user) {
+        console.log("User logged in with ID: ", user.uid);
         loadUserData();
     } else {
         console.log("No user is signed in.");
