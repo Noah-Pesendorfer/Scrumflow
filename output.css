@@ -1948,3 +1948,14 @@ video {
     color: rgb(196 181 253 / var(--tw-text-opacity));
   }
 }
+
+/* Modal */
+.modal.hidden {
+  display: none;
+}
+.modal-content {
+  transform: translate(-50%, -50%);
+  top: 50%;
+  left: 50%;
+  position: relative;
+}
