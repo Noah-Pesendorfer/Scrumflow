@@ -55,3 +55,39 @@ function loadUserData() {
             console.error("Fehler beim Laden des Token-Dokuments oder beim Aufrufen von GPT3: ", error);
         });
 }
+
+
+
+//Add Project functionality
+// Funktion, um das Modal zu öffnen
+function openProjectModal() {
+    document.getElementById('projectModal').style.display = 'block';
+}
+  
+// Funktion, um das Modal zu schließen
+function closeProjectModal() {
+    document.getElementById('projectModal').style.display = 'none';
+}
+
+// Funktion, um ein neues Projekt hinzuzufügen, nachdem das Formular eingereicht wurde
+function submitProject() {
+    var projectName = document.getElementById('projectName').value;
+    var projectGrid = document.querySelector('.project-grid');
+
+    // Erstellen des neuen Projekt-Elements
+    var newProject = document.createElement('div');
+    newProject.innerHTML = projectName;
+    // Füge hier weitere Stile oder Klassen hinzu
+
+    // Hinzufügen zum Projekt-Grid
+    projectGrid.appendChild(newProject);
+
+    // Modal schließen
+    closeProjectModal();
+}
+
+// Verhindern, dass das Formular wirklich abgeschickt wird
+document.getElementById('projectForm').addEventListener('submit', function(event){
+    event.preventDefault();
+    submitProject();
+});
